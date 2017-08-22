@@ -3,16 +3,12 @@
     <title>S3 Server</title>
   </head>
   <body>
-    This is an S3 Server. It proxies your requests to the {{s3Bucket}} S3 bucket. 
-    The current path you chose had a '/' at the end and I didn't find an index.html inside it, 
-    so here are all the subfolders I found instead:
-    <ul>
-      {{#prefixes}}
-        <li><a href="/{{Prefix}}">{{Prefix}}</a></li>
-      {{/prefixes}}
-    </ul>
-
-    By the way, if you think this is super ugly and want to make it look better. Here's
-    my address: <a href="https://github.com/signalfx/s3-server">https://github.com/signalfx/s3-server</a>.
+    <H1>Index of {{prefix}}</H1>
+    <HR>
+    <pre>
+{{#prefixes}}
+<a href="{{Url}}">{{Key}}</a>{{Spaces}} {{LastModified}} {{Size}}
+{{/prefixes}}
+    </pre>
   </body>
 </html>

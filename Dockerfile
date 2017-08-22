@@ -1,17 +1,8 @@
-FROM quay.io/signalfuse/maestro-base:alp-3.2
+FROM node:boron-alpine
 
-MAINTAINER Ozan Turgut <ozan@signalfuse.com>
+COPY lib /my_app/lib/
+COPY bin /my_app/bin/
+COPY package.json /my_app/
+RUN (cd /my_app && npm install)
 
-ENV DEBIAN_FRONTEND noninteractive
-
-WORKDIR /opt/s3-server/
-
-# Install node
-RUN apk-install nodejs
-
-# Install s3-server
-ADD . /opt/s3-server/
-RUN npm install --production
-
-# Run the server
-CMD node bin/server.js
+CMD ["/bin/sh", "-c", "(cd /my_app && /usr/local/bin/node bin/server.js)"]
