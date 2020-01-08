@@ -21,6 +21,7 @@ var secret = argv.secret || process.env.AWS_SECRET_ACCESS_KEY;
 var port = argv.p || argv.port || process.env.S3_SERVER_PORT || 3010;
 var securePort = argv.securePort || process.env.S3_SERVER_SECURE_PORT || 3020;
 var securePassphrase = argv.securePassphrase || process.env.S3_SERVER_SECURE_PASSPHRASE;
+var noCache = argv.noCache || process.env.NO_CACHE;
 
 var privateKey, certificate;
 if (process.env.S3_SERVER_SECURE_KEY_FILE || argv.secureKey) {
@@ -63,7 +64,7 @@ function serve(path, res){
       res.status(200);
     }
 
-    res.set({
+    const headers = {
       'Content-Length': data.ContentLength,
       'Last-Modified': data.LastModified,
       'Expiration': data.Expiration,
@@ -74,7 +75,13 @@ function serve(path, res){
       'Access-Control-Allow-Methods': 'GET',
       'Access-Control-Allow-Headers': 'Host,Content-*',
       'Access-Control-Max-Age': '3000'
-    });
+    };
+
+    if (noCache) {
+      headers['Cache-Control'] = 'no-cache';
+    }
+
+    res.set(headers);
 
     res.write(data.Body);
     res.end();
